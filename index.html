@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TODO-List</title>
+<link rel="stylesheet" href="todosheet.css">
+</head>
+<body>
+  <h1>TODOアプリ</h1>
+
+  <p class = "clock" id="current"></p>
+
+  <script>
+    setInterval(()=>{
+      document.querySelector('#current').textContent =  '現在の時刻は' + new Date().toLocaleString() + 'です。';
+    }, 1000);
+  </script>
+
+  <p class = "description">
+    左の空白にタスクを、右の空白にアラーム設定したい時間を入力してください。</br>
+    時間の記入は以下の例を参考に入力してください。</br>
+      例：2022年5月25日の15時02分に設定したいなら、「2022525152」と記入</br>
+      例：2022年5月20日の8時00分に設定したいなら、「202252080」と記入</br>
+    ただし、タスクが複数ある場合でもアラームはタスク1つ分しか設定できません。
+  </p>
+
+  <div  style = "text-align : center;">
+  <form>
+    <input class="task_value" type="text" />
+    <input class="time_value" type="text" /> 
+    <button class="task_submit" type="button">追加</button>
+  </form>
+  </div>
+  
+  <div id="table">
+    <h2>やるべきこと</h2>
+    <ul class="task_list"></ul>
+  </div>
+
+<script>
+const taskValue = document.getElementsByClassName('task_value')[0];
+const taskSubmit = document.getElementsByClassName('task_submit')[0];
+const taskList = document.getElementsByClassName('task_list')[0];
+const timeValue = document.getElementsByClassName('time_value')[0]; 
+
+//追加ボタンを作成
+const addTasks = (task) => {
+    // 入力したタスクを追加・表示
+    const listItem = document.createElement('li');
+    const showItem = taskList.appendChild(listItem);
+    showItem.innerHTML = task;
+
+    //タスクに削除ボタンを付与
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = '削除';
+    listItem.appendChild(deleteButton);
+
+    //削除ボタンをクリックし、イベントを発動（タスクが削除）
+    deleteButton.addEventListener('click', evt => {
+        evt.preventDefault();
+        deleteTasks(deleteButton);
+    });
+};
+
+//削除ボタンにタスクを消す機能を付与
+const deleteTasks = (deleteButton) => {
+    const chosenTask = deleteButton.closest('li');
+    taskList.removeChild(chosenTask);
+};
+
+//追加ボタンをクリックし、イベントを発動（タスクが追加）
+taskSubmit.addEventListener('click', evt => {
+    evt.preventDefault();
+    const task = taskValue.value;
+    addTasks(task);
+    setInterval("alerm()",1000);
+    taskValue.value = '';
+});
+
+
+//時報機能
+function alerm(){
+  const time = timeValue.value + '0';
+  let now = new Date();
+  let year = String(now.getFullYear());
+  let month = String(now.getMonth() + 1);
+  let day = String(now.getDate());
+  let hour = String(now.getHours());
+  let minute = String(now.getMinutes());
+  let second = String(now.getSeconds());
+ const realTime = year  + month  + day  + hour  +  minute + second;
+ //window.alert(realTime)
+ if(time == realTime){
+   window.alert("警告！今すぐやらなければならないタスクがあります。")
+   timeValue.value = ''; 
+ }
+}
+
+
+
+
+</script>
+
+</body>
+
+
+
+</html>
